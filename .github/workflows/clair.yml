@@ -1,20 +1,18 @@
-stages:
-  - security
+on:
+  push:
+    branches:
+      - main
 
-security_scan:
+clair:
   stage: security
-  allow_failure: true # FIXME: remove this
   image:
-    name: enriquitotupapi/webgoat:main
+    name: quay.io/projectquay/clair:4.7.2
   services:
     - docker:dind
   script:
-    # Pull the Docker image using the commit SHA
-    - docker pull "$DOCKER_IMAGE_NAME:$CI_COMMIT_SHA"
-    # Run Clair in combo mode
+    - docker pull enriquitotupapi/webgoat
     - clair -mode combo
-    # Generate a security report for the image and store it in clair-report.json
-    - clairctl report "$DOCKER_IMAGE_NAME:$CI_COMMIT_SHA" --format json > clair-report.json
+    - clairctl report enriquitotupapi/webgoat --format json > clair-report.json
   artifacts:
     when: always
     expire_in: "1 week"

@@ -25,7 +25,7 @@ jobs:
 
     - name: Run Docker Scout CVE scan
       run: |
-        docker scout cves --image enriquitotupapi/webgoat:main --format json --output scout-report.json
+        docker scout cves enriquitotupapi/webgoat:main --format json --output scout-report.json
 
     - name: Upload scan report as artifact
       uses: actions/upload-artifact@v3

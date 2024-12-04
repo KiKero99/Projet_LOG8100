@@ -28,7 +28,7 @@ jobs:
       run: docker scout cves --image enriquitotupapi/webgoat:main --format json --output scout-report.json
 
     - name: Upload Scout Report as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: scout-report
         path: scout-report.json

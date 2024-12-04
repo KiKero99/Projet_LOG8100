@@ -6,7 +6,7 @@
  COPY . .
  
  # Use Maven directly to build the project
- RUN mvn clean install 
+ RUN mvnw clean install 
  
  # Stage 2: Create the WebGoat runtime image
  FROM docker.io/eclipse-temurin:21-jdk-jammy

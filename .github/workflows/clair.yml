@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Docker
+    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
     - name: Install Docker Scout CLI
@@ -23,9 +23,15 @@ jobs:
         sudo mv docker-scout /usr/local/bin
         sudo chmod +x /usr/local/bin/docker-scout
 
+    - name: Check Docker Scout version
+      run: docker-scout --version
+
+    - name: Pull WebGoat image
+      run: docker pull enriquitotupapi/webgoat:main
+
     - name: Run Docker Scout CVE scan
       run: |
-        docker-scout cve --image enriquitotupapi/webgoat:main --format json --debug > scout-report.json
+        docker-scout cve --image enriquitotupapi/webgoat:main --format json --debug | tee scout-report.json
 
     - name: Upload scan report as artifact
       uses: actions/upload-artifact@v3

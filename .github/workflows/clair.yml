@@ -8,15 +8,46 @@ on:
 
 jobs:
   clair:
-    stage: security
-    image:
-      name: quay.io/projectquay/clair:4.7.2
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+      contents: read
+      actions: read
+      security-events: write
+
     services:
       - docker:dind
-    script:
-      - docker pull enriquitotupapi/webgoat
-      - clair -mode combo
-      - clairctl report enriquitotupapi/webgoat --format json > clair-report.json
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: enriquitotupapi
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull Docker image
+        run: docker pull enriquitotupapi/webgoat
+
+      - name: Run Clair security scan
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            quay.io/projectquay/clair:4.7.2 \
+            clair -mode combo
+
+      - name: Generate Clair Report
+        run: |
+          clairctl report enriquitotupapi/webgoat --format json > clair-report.json
+
+      - name: Upload Clair Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: clair-report
+          path: clair-report.json
+
     artifacts:
       when: always
       expire_in: "1 week"

@@ -2,8 +2,11 @@ name: Docker Scout Security Scan
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '19 12 * * 0'
 
 jobs:
   docker_scout_scan:

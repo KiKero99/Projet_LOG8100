@@ -30,7 +30,7 @@ jobs:
       - name: Install Docker Scout CLI
         run: |
           # Download the Docker Scout CLI tarball from the correct URL
-          curl -L -o docker-scout.tar.gz https://github.com/docker/scout-cli/releases/download/v0.7.0/docker-scout-linux-amd64-0.7.0.tar.gz
+          curl -L -o docker-scout.tar.gz https://github.com/docker/scout-cli/releases/download/v1.15.1/docker-scout_1.15.1_darwin_amd64.tar.gz
           
           # Check if the file is downloaded correctly
           ls -lh docker-scout.tar.gz

@@ -10,11 +10,13 @@ RUN \
 
 USER webgoat
 
-# Use Maven image for building the application
-FROM maven:3.8-openjdk-11-slim AS build
+FROM maven:3.9-openjdk-21-slim AS builder
+
+WORKDIR /build
 COPY . .
-# Build the application using the Maven Wrapper (correct Linux version)
-RUN ./mvnw clean install
+
+# Use Maven directly to build the project
+RUN mvn clean install
 
 # Copy the built jar to the container
 COPY --chown=webgoat target/webgoat-*.jar /home/webgoat/webgoat.jar

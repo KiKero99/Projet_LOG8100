@@ -14,10 +14,10 @@ USER webgoat
 FROM maven:3.8-openjdk-11-slim AS build
 
 # Make sure mvnw has execute permission
-RUN chmod +x ./WebGoat-main/mvnw
+RUN chmod +x ./mvnw
 
 # Build the application using the Maven Wrapper (correct Linux version)
-RUN ./WebGoat-main/mvnw clean install
+RUN ./mvnw clean install
 
 # Copy the built jar to the container
 COPY --chown=webgoat target/webgoat-*.jar /home/webgoat/webgoat.jar

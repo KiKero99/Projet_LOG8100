@@ -1,5 +1,5 @@
  # Stage 1: Build the WebGoat application
-
+ RUN docker pull maven:3.9-openjdk-21-slim
  FROM maven:3.8-openjdk-21-slim AS builder
 
  WORKDIR /build

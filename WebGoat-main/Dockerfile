@@ -11,7 +11,11 @@ RUN \
 
 USER webgoat
 
-#COPY --chown=webgoat target/webgoat-*.jar /home/webgoat/webgoat.jar
+FROM maven:3.8-openjdk-11-slim AS build
+
+RUN ./mvnw.cmd clean install
+
+COPY --chown=webgoat target/webgoat-*.jar /home/webgoat/webgoat.jar
 
 EXPOSE 8080
 EXPOSE 9090

@@ -13,9 +13,6 @@ USER webgoat
 # Use Maven image for building the application
 FROM maven:3.8-openjdk-11-slim AS build
 
-# Make sure mvnw has execute permission
-RUN chmod +x ./mvnw
-
 # Build the application using the Maven Wrapper (correct Linux version)
 RUN ./mvnw clean install
 

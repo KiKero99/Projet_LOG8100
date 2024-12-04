@@ -13,17 +13,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Trivy
-      uses: aquasecurity/trivy-action@0.28.0
-
-    - name: Force Update Trivy Database
-      run: |
-        trivy --download-db-only
+      uses: aquasecurity/setup-trivy@v0.2.1
 
     - name: Pull Docker Image from Docker Hub
       run: |
         docker pull enriquitotupapi/webgoat:main
 
     - name: Run Trivy Scan
+      if: always()  # Ensures the step runs regardless of previous steps' status
       run: |
         trivy image --format json --output trivy-report.json enriquitotupapi/webgoat:main
 

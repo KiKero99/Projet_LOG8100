@@ -33,9 +33,6 @@ jobs:
           username: enriquitotupapi
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Run Maven clean install
-        run: mvn clean install  # Use Maven directly instead of mvnw
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4

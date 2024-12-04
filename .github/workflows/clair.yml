@@ -29,16 +29,19 @@ jobs:
 
       - name: Install Docker Scout CLI
         run: |
-          # Download the Docker Scout CLI tarball
+          # Download the Docker Scout CLI tarball from the correct URL
           curl -L -o docker-scout.tar.gz https://github.com/docker/scout-cli/releases/download/v0.7.0/docker-scout-linux-amd64-0.7.0.tar.gz
+          
           # Check if the file is downloaded correctly
           ls -lh docker-scout.tar.gz
           if [ $(stat -c %s docker-scout.tar.gz) -lt 100 ]; then
             echo "Error: The downloaded file is too small. Check the URL."
             exit 1
           fi
+          
           # Extract the tar.gz file
           tar -xzvf docker-scout.tar.gz
+          
           # Move docker-scout binary to /usr/local/bin for global use
           sudo mv docker-scout /usr/local/bin
 

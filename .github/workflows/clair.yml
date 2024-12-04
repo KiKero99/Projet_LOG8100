@@ -21,10 +21,11 @@ jobs:
         curl -L -o docker-scout.tar.gz https://github.com/docker/scout-cli/releases/download/v1.15.1/docker-scout_1.15.1_linux_amd64.tar.gz
         tar -xzvf docker-scout.tar.gz
         sudo mv docker-scout /usr/local/bin
+        sudo chmod +x /usr/local/bin/docker-scout
 
     - name: Run Docker Scout CVE scan
       run: |
-        docker-scout cve --image enriquitotupapi/webgoat:main --format json > scout-report.json
+        docker-scout cve --image enriquitotupapi/webgoat:main --format json --debug > scout-report.json
 
     - name: Upload scan report as artifact
       uses: actions/upload-artifact@v3

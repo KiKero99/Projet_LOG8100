@@ -1,6 +1,6 @@
  # Stage 1: Build the WebGoat application
 
- FROM maven:3.9-openjdk-21-slim AS builder
+ FROM maven:3.8-openjdk-21-slim AS builder
 
  WORKDIR /build
  COPY . .

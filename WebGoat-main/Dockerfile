@@ -1,17 +1,4 @@
- # Stage 1: Build the WebGoat application
- RUN docker pull maven:3.9-openjdk-21-slim
- FROM maven:3.8-openjdk-21-slim
-
- WORKDIR /build
- COPY . .
- 
- # Use Maven directly to build the project
- RUN mvnw clean install 
- 
- # Stage 2: Create the WebGoat runtime image
- FROM docker.io/eclipse-temurin:21-jdk-jammy
- 
- LABEL name="WebGoat: A deliberately insecure Web Application"
+  LABEL name="WebGoat: A deliberately insecure Web Application"
  LABEL maintainer="WebGoat team"
  
  RUN \

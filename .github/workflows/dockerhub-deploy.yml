@@ -22,8 +22,10 @@ jobs:
           java-version: '21'
           distribution: 'zulu'  # Use the Zulu distribution for JDK 21
 
-      - name: Install Maven
-        run: sudo apt-get install maven  # Installs Maven
+      - name: Run Maven clean install
+        run: |
+          cd ./WebGoat-main  # Navigate to the directory containing the pom.xml
+          mvn clean install  # Execute the Maven build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2

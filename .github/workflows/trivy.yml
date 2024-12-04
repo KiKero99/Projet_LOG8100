@@ -1,0 +1,44 @@
+name: CI Pipeline / Trivy Vulnerability Scan
+
+on:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+  
+  jobs:
+    build:
+      name: Build Docker Image
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+  
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t enriquitotupapi/webgoat .
+          docker push enriquitotupapi/webgoat
+  
+    trivy_scan:
+      name: Scan Docker Image with Trivy
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Set up Trivy
+        uses: aquasec/trivy-action@v0.0.17
+  
+      - name: Run Trivy Scan
+        run: |
+          trivy image --format json --output trivy-report.json enriquitotupapi/webgoat
+  
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-report
+          path: trivy-report.json
+  

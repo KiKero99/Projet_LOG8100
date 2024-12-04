@@ -24,8 +24,8 @@ jobs:
           username: enriquitotupapi
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull Docker image
-        run: docker pull enriquitotupapi/webgoat
+      - name: Pull Docker image with the correct tag
+        run: docker pull enriquitotupapi/webgoat:main  # Use the 'main' tag instead of 'latest'
 
       - name: Install Docker Scout CLI
         run: |
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Docker Scout Security Scan
         run: |
-          docker scout cve --image enriquitotupapi/webgoat --format json > scout-report.json
+          docker scout cve --image enriquitotupapi/webgoat:main --format json > scout-report.json  # Specify the 'main' tag here as well
 
       - name: Upload Docker Scout Report
         uses: actions/upload-artifact@v3

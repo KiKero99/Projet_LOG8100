@@ -5,6 +5,7 @@ LABEL name="WebGoat: A deliberately insecure Web Application"
 LABEL maintainer="WebGoat team"
 
 RUN \
+  cd WebGoat-main \
   useradd -ms /bin/bash webgoat && \
   chgrp -R 0 /home/webgoat && \
   chmod -R g=u /home/webgoat

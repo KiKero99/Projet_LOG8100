@@ -1,21 +1,21 @@
-name: Docker Scout Security Scan
+name: Clair Security Scan
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '19 12 * * 0'
+    branches:
+      - main
 
 jobs:
-  docker_scout_scan:
+  clair:
     runs-on: ubuntu-latest
     permissions:
       packages: read
       contents: read
       actions: read
       security-events: write
+
+    services:
+      - docker:dind
 
     steps:
       - name: Checkout repository
@@ -30,23 +30,26 @@ jobs:
       - name: Pull Docker image
         run: docker pull enriquitotupapi/webgoat
 
-      - name: Install Docker Scout CLI
+      - name: Run Clair security scan
         run: |
-          curl -sSL https://github.com/docker/scout-cli/releases/download/v0.7.0/docker-scout-linux-amd64-0.7.0.tar.gz | tar -xz
-          sudo mv docker-scout /usr/local/bin
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            quay.io/projectquay/clair:4.7.2 \
+            clair -mode combo
 
-      - name: Run Docker Scout Security Scan
+      - name: Generate Clair Report
         run: |
-          docker scout cve --image enriquitotupapi/webgoat --format json > scout-report.json
+          clairctl report enriquitotupapi/webgoat --format json > clair-report.json
 
-      - name: Upload Docker Scout Report
+      - name: Upload Clair Report
         uses: actions/upload-artifact@v3
         with:
-          name: scout-report
-          path: scout-report.json
+          name: clair-report
+          path: clair-report.json
 
+    # Move the artifacts configuration under the job:
     artifacts:
       when: always
       expire_in: "1 week"
       paths:
-        - scout-report.json
+        - clair-report.json

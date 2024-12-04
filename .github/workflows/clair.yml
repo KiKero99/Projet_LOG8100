@@ -1,20 +1,24 @@
+name: Clair Security Scan
+
 on:
   push:
     branches:
       - main
 
-clair:
-  stage: security
-  image:
-    name: quay.io/projectquay/clair:4.7.2
-  services:
-    - docker:dind
-  script:
-    - docker pull enriquitotupapi/webgoat
-    - clair -mode combo
-    - clairctl report enriquitotupapi/webgoat --format json > clair-report.json
-  artifacts:
-    when: always
-    expire_in: "1 week"
-    paths:
-      - clair-report.json
+
+jobs:
+  clair:
+    stage: security
+    image:
+      name: quay.io/projectquay/clair:4.7.2
+    services:
+      - docker:dind
+    script:
+      - docker pull enriquitotupapi/webgoat
+      - clair -mode combo
+      - clairctl report enriquitotupapi/webgoat --format json > clair-report.json
+    artifacts:
+      when: always
+      expire_in: "1 week"
+      paths:
+        - clair-report.json

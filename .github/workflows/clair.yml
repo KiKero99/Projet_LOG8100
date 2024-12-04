@@ -3,12 +3,11 @@ name: Clair Security Scan
 on:
   push:
     branches:
-      - main
-
+      - main  # Ensure you are pushing to the 'main' branch
 
 jobs:
   clair:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Runs on the latest Ubuntu runner
     permissions:
       packages: read
       contents: read
@@ -16,7 +15,8 @@ jobs:
       security-events: write
 
     services:
-      - docker:dind
+      - name: docker:dind
+        options: --privileged  # Adding --privileged for Docker-in-Docker to run
 
     steps:
       - name: Checkout repository
@@ -30,6 +30,12 @@ jobs:
 
       - name: Pull Docker image
         run: docker pull enriquitotupapi/webgoat
+
+      - name: Install Clairctl
+        run: |
+          curl -L https://github.com/jgsqware/clairctl/releases/download/v1.4.0/clairctl-linux-amd64 -o clairctl
+          chmod +x clairctl
+          sudo mv clairctl /usr/local/bin/clairctl
 
       - name: Run Clair security scan
         run: |

@@ -1,0 +1,14 @@
+- name: Deploy WebGoat to Kubernetes
+  hosts: localhost
+  tasks:
+    - name: Apply Kubernetes Deployment
+      kubernetes.core.k8s:
+        kubeconfig: ~/kubeconfig.yaml
+        state: present
+        definition: "{{ lookup('file', '../k8s/deployment.yaml') }}"
+
+    - name: Apply Kubernetes Service
+      kubernetes.core.k8s:
+        kubeconfig: ~/kubeconfig.yaml
+        state: present
+        definition: "{{ lookup('file', '../k8s/service.yaml') }}"

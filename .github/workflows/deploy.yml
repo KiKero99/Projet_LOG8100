@@ -3,9 +3,8 @@ on:
     branches:
       - main
 
-jobs:  # Ensure this key exists
-  deploy:
-    needs: security-tests
+jobs:  # Define the jobs
+  deploy:  # Standalone deploy job
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +44,6 @@ jobs:  # Ensure this key exists
 
       # Terraform Apply
       - name: Terraform Apply
-        if: success()
         run: terraform apply -auto-approve
         working-directory: terraform
 

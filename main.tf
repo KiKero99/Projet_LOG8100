@@ -26,7 +26,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "rg" {
   name     = "aks-resource-group"
-  location = "eastus"
+  location = "westus"
 }
 
 resource "azurerm_kubernetes_cluster" "k8s" {
@@ -37,8 +37,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
   default_node_pool {
     name       = "default"
-    node_count = 2
-    vm_size    = "Standard_DS2_v2"
+    node_count = 1
+    vm_size    = "Standard_D2s_v4"  # Moins de ressources
+    os_disk_size_gb = 30
   }
 
   identity {

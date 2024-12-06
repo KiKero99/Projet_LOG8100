@@ -12,12 +12,12 @@ jobs:  # Define the jobs
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Azure Login
       - name: Azure Login
         uses: azure/login@v1
         with:
-          username: ${{ secrets.AZURE_USERNAME }}
-          password: ${{ secrets.AZURE_PASSWORD }}
+          client-id: ${{ secrets.TP38100_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.TP38100_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.TP38100_AZURE_SUBSCRIPTION_ID }}
 
       # Setup Terraform
       - name: Setup Terraform

@@ -19,10 +19,10 @@ jobs:  # Define the jobs
       - name: Azure Login
         uses: azure/login@v1
         with:
-          auth-type: IDENTITY
+          login-method: 'az-cli'
+          client-id: ${{ secrets.TP38100_AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.TP38100_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.TP38100_AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
 
       # Setup Terraform
       - name: Setup Terraform

@@ -2,13 +2,14 @@ on:
   push:
     branches:
       - main
-permissions:
-  id-token: write
-  contents: read
+
 
 jobs:  # Define the jobs
   deploy:  # Standalone deploy job
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       # Checkout the repository

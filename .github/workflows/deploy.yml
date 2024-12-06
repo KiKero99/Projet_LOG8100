@@ -3,26 +3,25 @@ on:
     branches:
       - main
 
-jobs:
-  deploy:
+
+jobs:  # Define the jobs
+  deploy:  # Standalone deploy job
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required to authenticate with OIDC
-      contents: read   # Required to checkout the repository
+      id-token: write
+      contents: read
 
     steps:
       # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Login to Azure using OIDC (No Service Principal needed)
       - name: Azure Login
         uses: azure/login@v1
-        with:
-          # These can be omitted when using OIDC, but can be added if needed
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          allow-no-subscriptions: true  # This flag allows dynamic subscription selection
+        with:         
+          client-id: ${{ secrets.TP38100_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.TP38100_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.TP38100_AZURE_SUBSCRIPTION_ID }}
 
       # Setup Terraform
       - name: Setup Terraform
@@ -35,7 +34,7 @@ jobs:
         run: terraform init
         working-directory: terraform
 
-      # Import Existing Resource (if needed)
+      # Import Existing Resource
       - name: Import Existing Resource
         run: |
           terraform import azurerm_kubernetes_cluster.k8s /subscriptions/${{ secrets.AZ_RESOURCE_ID }}/resourceGroups/aks-resource-group/providers/Microsoft.ContainerService/managedClusters/aks-cluster 
@@ -61,10 +60,16 @@ jobs:
             --file /home/runner/kubeconfig.yaml
           chmod 600 /home/runner/kubeconfig.yaml
 
-      # Run Ansible Playbook
-      - name: Run Ansible Playbook
+      # Ansible Playbook
+      - name: Ansible Playbook
         run: |
           python3 -m venv ansible-env
           source ansible-env/bin/activate
+
           pip install ansible kubernetes
+
+          # Ensure kubeconfig.yaml is accessible and valid
+          cat /home/runner/kubeconfig.yaml
+          python3 -c "import yaml; yaml.safe_load(open('/home/runner/kubeconfig.yaml'))"
+          
           ansible-playbook -vvvv -i "localhost," -c local ansible/k8s_deploy.yaml

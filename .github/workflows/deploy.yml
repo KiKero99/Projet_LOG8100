@@ -1,18 +1,24 @@
+
+
+
+# Uncomment and get azure credentials from principal service to auto deploy and add secrets (AZ_RESOURCE_ID)
+
+
+
 # on:
 #   push:
 #     branches:
 #       - main
 
 
-# jobs:  # Define the jobs
-#   deploy:  # Standalone deploy job
+# jobs: 
+#   deploy:  
 #     runs-on: ubuntu-latest
 #     permissions:
 #       id-token: write
 #       contents: read
 
 #     steps:
-#       # Checkout the repository
 #       - name: Checkout code
 #         uses: actions/checkout@v3
 
@@ -23,35 +29,30 @@
 #           tenant-id: ${{ secrets.TP38100_AZURE_TENANT_ID }}
 #           subscription-id: ${{ secrets.TP38100_AZURE_SUBSCRIPTION_ID }}
 
-#       # Setup Terraform
 #       - name: Setup Terraform
 #         uses: hashicorp/setup-terraform@v2
 #         with:
 #           terraform_version: 1.5.0
 
-#       # Terraform Init
+#       # Init
 #       - name: Terraform Init
 #         run: terraform init
 #         working-directory: terraform
-
-#       # Import Existing Resource
 #       - name: Import Existing Resource
 #         run: |
 #           terraform import azurerm_kubernetes_cluster.k8s /subscriptions/${{ secrets.AZ_RESOURCE_ID }}/resourceGroups/aks-resource-group/providers/Microsoft.ContainerService/managedClusters/aks-cluster 
 #           terraform import azurerm_resource_group.rg /subscriptions/${{ secrets.AZ_RESOURCE_ID }}/resourceGroups/aks-resource-group
 #         working-directory: terraform
 
-#       # Terraform Plan
+#       # Terraform
 #       - name: Terraform Plan
 #         run: terraform plan
 #         working-directory: terraform
-
-#       # Terraform Apply
 #       - name: Terraform Apply
 #         run: terraform apply -auto-approve
 #         working-directory: terraform
 
-#       # Fetch kubeconfig using Azure CLI
+#       # kubeconfig 
 #       - name: Fetch kubeconfig using Azure CLI
 #         run: |
 #           az aks get-credentials \
@@ -60,7 +61,7 @@
 #             --file /home/runner/kubeconfig.yaml
 #           chmod 600 /home/runner/kubeconfig.yaml
 
-#       # Ansible Playbook
+#       # Ansible 
 #       - name: Ansible Playbook
 #         run: |
 #           python3 -m venv ansible-env

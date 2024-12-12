@@ -5,16 +5,20 @@ metadata:
   namespace: default
   labels:
     app: webgoat
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8080"
 spec:
   selector:
     app: webgoat
   type: LoadBalancer
   ports:
-  - name: http-port  # Unique name for port 8080
+  - name: http-port
     protocol: TCP
     port: 8080
     targetPort: 8080
-  - name: admin-port # Unique name for port 9090
+  - name: admin-port
     protocol: TCP
     port: 9090
     targetPort: 9090

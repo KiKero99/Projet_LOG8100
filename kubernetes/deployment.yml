@@ -14,13 +14,16 @@ spec:
     metadata:
       labels:
         app: webgoat
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/WebGoat/actuator/prometheus"
+        prometheus.io/port: "8080"
     spec:
       containers:
       - name: webgoat
-        image: enriquitotupapi/webgoat:main # Replace with the correct image tag if needed
+        image: enriquitotupapi/webgoat:main
         ports:
-        - containerPort: 8080 # Internal port 8080
-        - containerPort: 9090 # Internal port 9090
+        - containerPort: 8080
         resources:
           requests:
             memory: "512Mi"

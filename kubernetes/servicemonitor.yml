@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: webgoat-servicemonitor
+  namespace: monitoring # Assurez-vous d'utiliser le namespace où vous déployez vos ServiceMonitors
+  labels:
+    prometheus: prometheus # ou un autre label que vous utilisez dans votre Prometheus CR
+spec:
+  selector:
+    matchLabels:
+      app: webgoat # Correspond au label "app: webgoat" de votre service
+  namespaceSelector:
+    matchNames:
+      - default # Correspond au namespace "default" de votre service
+  endpoints:
+  - port: http-port # Correspond au nom du port où sont les metrics
+    path: /metrics

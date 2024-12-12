@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+data:
+  prometheus-rules.yaml: |
+    groups:
+    - name: webgoat_alerts
+      rules:
+      - alert: WebgoatInstanceDown
+        expr: 3 == 3
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Webgoat instance down"
+          description: "Webgoat instance in namespace {{$labels.namespace}} has been down for more than 1 minute."
+      - alert: WebgoatHighCPUUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{namespace="default", container="webgoat"}[5m])) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Webgoat High CPU Usage"
+          description: "Webgoat instance in namespace {{$labels.namespace}} has been using more than 80% of CPU for more than 5 minutes."
+      - alert: WebgoatHighMemoryUsage
+        expr: sum(container_memory_working_set_bytes{namespace="default", container="webgoat"})/sum(container_spec_memory_limit_bytes{namespace="default", container="webgoat"}) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Webgoat High Memory Usage"
+          description: "Webgoat instance in namespace {{$labels.namespace}} has been using more than 80% of its memory for more than 5 minutes."

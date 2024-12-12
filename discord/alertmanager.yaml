@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-prometheus-alertmanager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/instance: prometheus
+data:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: 'discord-webhook'
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
+
+    receivers:
+    - name: 'discord-webhook'
+      webhook_configs:
+      - url: 'https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj'
+        send_resolved: true

@@ -1,34 +1,35 @@
-# name: CI Pipeline / Trivy Vulnerability Scan
+name: CI Pipeline / Trivy Vulnerability Scan
 
-# on:
-#   push:
-#     branches: [ "main" ]
+on:
+  push:
+    branches: [ "main" ]
 
-# jobs:
-#   trivy_scan:
-#     name: Scan Docker Image with Trivy
-#     runs-on: ubuntu-22.04  
-#     steps:
-#     - name: Checkout repository
-#       uses: actions/checkout@v4
+jobs:
+  trivy_scan:
+    name: Scan Docker Image with Trivy
+    runs-on: ubuntu-22.04  
+    timeout-minutes: 10 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-#     - name: Set up Trivy
-#       uses: aquasecurity/setup-trivy@v0.2.1
+    - name: Set up Trivy
+      uses: aquasecurity/setup-trivy@v0.2.2
 
-#     - name: Pull Docker Image from Docker Hub
-#       run: |
-#         docker pull enriquitotupapi/webgoat:main
+    - name: Pull Docker Image from Docker Hub
+      run: |
+        docker pull enriquitotupapi/webgoat:main
 
-#     - name: Run Trivy Scan
-#       if: always()  # Ensures the step runs regardless of previous steps' status
-#       run: |
-#         trivy image --format json --output trivy-report.json enriquitotupapi/webgoat:main
+    - name: Run Trivy Scan
+      if: always()  
+      run: |
+        trivy image --timeout 10m --format json --output trivy-report.json enriquitotupapi/webgoat:main
 
-#     - name: Upload Trivy Report
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: trivy-report
-#         path: trivy-report.json
+    - name: Upload Trivy Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: trivy-report
+        path: trivy-report.json
 
 
 

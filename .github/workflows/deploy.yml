@@ -73,4 +73,4 @@
 #           cat /home/runner/kubeconfig.yaml
 #           python3 -c "import yaml; yaml.safe_load(open('/home/runner/kubeconfig.yaml'))"
           
-#           ansible-playbook -vvvv -i "localhost," -c local ansible/k8s_deploy.yaml
+#           ansible-playbook -vvvv -i "localhost," -c local ansible.yml

@@ -70,3 +70,11 @@ Ce workflow déploie l'application dans l'environnement cible.
 
 ---
 
+## Installations nécessaire pour réaliser le projet
+Terraform: https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli 
+WSL: https://learn.microsoft.com/en-us/windows/wsl/install
+Ubuntu: https://ubuntu.com/tutorials/install-ubuntu-desktop#1-overview
+Helm: https://helm.sh/docs/helm/helm_install/ 
+Prometheus: https://prometheus.io/docs/prometheus/latest/installation/
+Grafana : https://grafana.com/docs/grafana/latest/setup-grafana/installation/ 
+

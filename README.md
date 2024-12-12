@@ -64,7 +64,7 @@ Ce workflow déploie l'application dans l'environnement cible.
 *   Connexion à Azure : Établissement de la connexion à Azure via les identifiants.
 *   Configuration de Terraform : Mise en place de la configuration pour Terraform.
 *   Initialisation de Terraform : Exécution de la commande `terraform init`.
-*   Planification de Terraform : Exécution de la commande `terraform plan`.
+*   Planification de Terraform : Exécution de la commande `terraform apply`.
 *   Récupération de kubeconfig : Récupération du fichier kubeconfig en utilisant Azure CLI.
 *   Exécution du playbook Ansible : Lancement de l'exécution du playbook Ansible.
 

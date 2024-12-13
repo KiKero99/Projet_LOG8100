@@ -1,4 +1,4 @@
-name: Check Vulnerabilities and Notify Discord
+name: Check Open Vulnerabilities and Notify Discord
 
 on:
   push:
@@ -14,25 +14,25 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Fetch vulnerabilities
-        id: fetch_vulnerabilities
+      - name: Fetch open vulnerabilities
+        id: fetch_open_vulnerabilities
         run: |
-          echo "Fetching vulnerabilities..."
+          echo "Fetching open vulnerabilities..."
 
-          # Fetch all code-scanning alerts, including open, fixed, and dismissed
-          TOTAL_COUNT=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/code-scanning/alerts?state=all" | jq '. | length')
+          # Fetch all alerts in the 'open' state
+          OPEN_COUNT=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/code-scanning/alerts?state=open" | jq '. | length')
 
-          echo "alerts_count=$TOTAL_COUNT" >> $GITHUB_ENV
+          echo "open_alerts_count=$OPEN_COUNT" >> $GITHUB_ENV
 
       - name: Notify Discord
         env:
-          DISCORD_WEBHOOK_URL:  https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj
-          ALERTS_COUNT: ${{ env.alerts_count }}
+          DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj
+          OPEN_ALERTS_COUNT: ${{ env.open_alerts_count }}
         run: |
           echo "Notifying Discord..."
           curl -H "Content-Type: application/json" \
           -d '{
-            "content": "HEY! 🚨 \n- There are currently **'"${ALERTS_COUNT}"'** code-scanning alerts (open, fixed, or dismissed) in the repository."
+            "content": "HEY! 🚨 \n- There are currently **'"${OPEN_ALERTS_COUNT}"'** open code-scanning alerts in the repository."
           }' \
           "${DISCORD_WEBHOOK_URL}"

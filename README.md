@@ -8,6 +8,8 @@ Le pipeline CI/CD consiste en 4 workflows, assurant le déploiement sécurisé d
 2.  **Scan de sécurité pour image docker**
 3.  **Déploiement de l'image sur DockerHub**
 4.  **Déploiement de l'application**
+5.  **Envoi de message discord**
+
 
 ---
 
@@ -68,6 +70,16 @@ Ce workflow déploie l'application dans l'environnement cible.
 *   Récupération de kubeconfig : Récupération du fichier kubeconfig en utilisant Azure CLI.
 *   Exécution du playbook Ansible : Lancement de l'exécution du playbook Ansible.
 
+---
+
+### 5. Envoi de message discord
+
+Ce workflow envoi un message signalant le nombre de vulnérabilités dans l'onglet sécurité code/scanning
+
+**Étapes :**
+
+*   Récupération du nombre de vulnérabilités : Extraction du nombre de vulnérabilités dans la dernière version du code du dépôt.
+*   Notification Discord: Envoi d'un message sur discord à l'aide d'un webhook
 ---
 
 ## Installations nécessaire pour réaliser le projet

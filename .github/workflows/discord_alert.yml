@@ -14,26 +14,25 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Fetch vulnerabilities and alerts
+      - name: Fetch vulnerabilities
         id: fetch_vulnerabilities
         run: |
           echo "Fetching vulnerabilities..."
-      
 
+          # Fetch the count of code-scanning alerts
           COUNT=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/security/code-scanning)
+          "https://api.github.com/repos/${{ github.repository }}/code-scanning/alerts" | jq '. | length')
 
-        
-          echo "Vulnerabilities: $COUNT"
+          echo "alerts_count=$COUNT" >> $GITHUB_ENV
 
       - name: Notify Discord
         env:
           DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj
+          ALERTS_COUNT: ${{ env.alerts_count }}
         run: |
           echo "Notifying Discord..."
-          TOTAL=${{ steps.fetch_vulnerabilities.outputs.total }}
-          DEPENDABOT=${{ steps.fetch_vulnerabilities.outputs.dependabot }}
-          CODE_SCANNING=${{ steps.fetch_vulnerabilities.outputs.code_scanning }}
           curl -H "Content-Type: application/json" \
-          -d '{"content": "There are currently **'$COUNT'** vulnerabilities\n-."}' \
-          "$DISCORD_WEBHOOK_URL"
+          -d '{
+            "content": "HEY! 🚨 \n- There are currently **'"${ALERTS_COUNT}"'** open vulnerabilities in the repository."
+          }' \
+          "${DISCORD_WEBHOOK_URL}"

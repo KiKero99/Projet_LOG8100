@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "Fetching vulnerabilities..."
           RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/code-scanning/alerts")
+          "https://api.github.com/repos/${{ github.repository }}/vulnerability-alerts")
           echo "$RESPONSE" > vulnerabilities.json
           COUNT=$(echo "$RESPONSE" | jq length)
           echo "::set-output name=count::$COUNT"

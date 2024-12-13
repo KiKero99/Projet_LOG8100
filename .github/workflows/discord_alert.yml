@@ -18,22 +18,13 @@ jobs:
         id: fetch_vulnerabilities
         run: |
           echo "Fetching vulnerabilities..."
-          DEPENDABOT_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/vulnerability-alerts")
+      
 
-          CODE_SCANNING_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/code-scanning/alerts")
+          COUNT=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/security/code-scanning)
 
-          DEPENDABOT_COUNT=$(echo "$DEPENDABOT_RESPONSE" | jq length)
-          CODE_SCANNING_COUNT=$(echo "$CODE_SCANNING_RESPONSE" | jq length)
-          TOTAL_COUNT=$((DEPENDABOT_COUNT + CODE_SCANNING_COUNT))
-
-          echo "Dependabot vulnerabilities: $DEPENDABOT_COUNT"
-          echo "Code scanning alerts: $CODE_SCANNING_COUNT"
-          echo "Total vulnerabilities: $TOTAL_COUNT"
-          echo "::set-output name=total::$TOTAL_COUNT"
-          echo "::set-output name=dependabot::$DEPENDABOT_COUNT"
-          echo "::set-output name=code_scanning::$CODE_SCANNING_COUNT"
+        
+          echo "Vulnerabilities: $COUNT"
 
       - name: Notify Discord
         env:
@@ -44,5 +35,5 @@ jobs:
           DEPENDABOT=${{ steps.fetch_vulnerabilities.outputs.dependabot }}
           CODE_SCANNING=${{ steps.fetch_vulnerabilities.outputs.code_scanning }}
           curl -H "Content-Type: application/json" \
-          -d '{"content": "There are currently **'$TOTAL'** open vulnerabilities in the repository.\n\n- Dependabot alerts: **'$DEPENDABOT'**\n- Code scanning alerts: **'$CODE_SCANNING'**."}' \
+          -d '{"content": "There are currently **'$COUNT'** vulnerabilities\n-."}' \
           "$DISCORD_WEBHOOK_URL"

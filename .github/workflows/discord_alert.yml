@@ -14,22 +14,35 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Get vulnerabilities from GitHub API
+      - name: Fetch vulnerabilities and alerts
         id: fetch_vulnerabilities
         run: |
           echo "Fetching vulnerabilities..."
-          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          DEPENDABOT_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/vulnerability-alerts")
-          echo "$RESPONSE" > vulnerabilities.json
-          COUNT=$(echo "$RESPONSE" | jq length)
-          echo "::set-output name=count::$COUNT"
+
+          CODE_SCANNING_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/code-scanning/alerts")
+
+          DEPENDABOT_COUNT=$(echo "$DEPENDABOT_RESPONSE" | jq length)
+          CODE_SCANNING_COUNT=$(echo "$CODE_SCANNING_RESPONSE" | jq length)
+          TOTAL_COUNT=$((DEPENDABOT_COUNT + CODE_SCANNING_COUNT))
+
+          echo "Dependabot vulnerabilities: $DEPENDABOT_COUNT"
+          echo "Code scanning alerts: $CODE_SCANNING_COUNT"
+          echo "Total vulnerabilities: $TOTAL_COUNT"
+          echo "::set-output name=total::$TOTAL_COUNT"
+          echo "::set-output name=dependabot::$DEPENDABOT_COUNT"
+          echo "::set-output name=code_scanning::$CODE_SCANNING_COUNT"
 
       - name: Notify Discord
         env:
-          DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           echo "Notifying Discord..."
-          COUNT=${{ steps.fetch_vulnerabilities.outputs.count }}
+          TOTAL=${{ steps.fetch_vulnerabilities.outputs.total }}
+          DEPENDABOT=${{ steps.fetch_vulnerabilities.outputs.dependabot }}
+          CODE_SCANNING=${{ steps.fetch_vulnerabilities.outputs.code_scanning }}
           curl -H "Content-Type: application/json" \
-          -d '{"content": "There are currently **'$COUNT'** open vulnerabilities in the repository."}' \
+          -d '{"content": "There are currently **'$TOTAL'** open vulnerabilities in the repository.\n\n- Dependabot alerts: **'$DEPENDABOT'**\n- Code scanning alerts: **'$CODE_SCANNING'**."}' \
           "$DISCORD_WEBHOOK_URL"

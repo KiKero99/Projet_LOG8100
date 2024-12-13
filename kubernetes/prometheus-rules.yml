@@ -9,13 +9,14 @@ data:
     - name: webgoat_alerts
       rules:
       - alert: WebgoatInstanceDown
-        expr: 3 == 3
+        expr: up{job="webgoat"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
           summary: "Webgoat instance down"
           description: "Webgoat instance in namespace {{$labels.namespace}} has been down for more than 1 minute."
+
       - alert: WebgoatHighCPUUsage
         expr: sum(rate(container_cpu_usage_seconds_total{namespace="default", container="webgoat"}[5m])) > 0.8
         for: 5m
@@ -32,3 +33,11 @@ data:
         annotations:
           summary: "Webgoat High Memory Usage"
           description: "Webgoat instance in namespace {{$labels.namespace}} has been using more than 80% of its memory for more than 5 minutes."
+      - alert: LessThanFiveServicesUp
+        expr: count(up{namespace="monitoring"}) < 5
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Less than 5 Kubernetes services are UP in the monitoring namespace"
+          description: "Only {{$value}} Kubernetes services are UP in the monitoring namespace. Expected at least 5."

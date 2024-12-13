@@ -7,7 +7,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Push Docker image to Docker Hub and deploy using Docker Compose
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -53,3 +53,16 @@ jobs:
             maintainer="enriquitotupapi"
             build_date=${{ steps.meta.outputs.timestamp }}
             commit_sha=${{ github.sha }}
+
+      - name: Set up Docker Compose
+        uses: docker/compose-action@v2
+        with:
+          version: 'v2.29.2'  # Specify the required Docker Compose version
+
+      - name: Run Docker Compose up
+        run: |
+          docker-compose -f ./WebGoat-main/docker-compose.yml up -d
+
+      - name: Verify services are running
+        run: |
+          docker ps  # Check if the containers are running

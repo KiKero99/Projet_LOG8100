@@ -37,7 +37,7 @@ jobs:
 
       - name: Notify Discord
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj
         run: |
           echo "Notifying Discord..."
           TOTAL=${{ steps.fetch_vulnerabilities.outputs.total }}

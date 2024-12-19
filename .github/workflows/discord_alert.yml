@@ -24,7 +24,7 @@ jobs:
 
       - name: Notify Discord
         env:
-          DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1316531644345094204/wn4Gai7lgd4TrcN4F9t9yCMDg2aeQ7dZ7EuE5P1skxOLr6Ov1JBnlifzXY3hhmUMP4nj
+          DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1315056667519352833/AaGBHzmeoBle6iCOOneKJxYW4Fub2yUyKCiEWfOy84smneNoU71FqHvsfGlXR_zaybPa
           OPEN_ALERTS_COUNT: ${{ env.open_alerts_count }}
         run: |
           echo "Notifying Discord..."
